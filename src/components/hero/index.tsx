@@ -1,56 +1,42 @@
-import { Rocket, Globe2, Wrench, Zap } from 'lucide-react'
-import { useTranslations } from 'next-intl'
-import { Button } from '../ui/button'
+'use client'
+import { Upload } from 'lucide-react'
+import React, { useState } from 'react'
 
-export const Hero = () => {
-  const t = useTranslations('home')
+import { Accept, useDropzone } from 'react-dropzone'
+
+export const VIDEO_FORMATS = [
+  { mimeType: 'video/mp4', format: 'mp4' },
+  { mimeType: 'video/quicktime', format: 'mov' },
+  { mimeType: 'video/x-msvideo', format: 'avi' },
+  { mimeType: 'video/x-matroska', format: 'mkv' },
+  { mimeType: 'video/x-flv', format: 'flv' },
+  { mimeType: 'video/webm', format: 'webm' },
+]
+
+const accept: Accept = VIDEO_FORMATS.reduce((prev, next) => {
+  return {
+    ...prev,
+    [next.mimeType]: ['.' + next.format],
+  }
+}, {})
+
+export function Hero() {
+  const [selectedOutputFormat, setOutputFormat] = useState('mp3')
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: () => {
+      return
+    },
+    accept: accept,
+  })
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-b from-sky-300 to-sky-500">
-      <section className="w-full py-32 md:py-48">
-        <div className="container px-4 md:px-6">
-          <div className="grid items-center gap-6">
-            <div className="flex flex-col justify-center space-y-4 text-center">
-              <div className="mb-24">
-                <h1 className="mb-6 text-3xl font-bold tracking-tighter text-transparent text-white sm:text-5xl xl:text-6xl/none">
-                  {t('hero-title')}
-                </h1>
-                <a href="https://github.com/Quilljou/next-ts-tailwind-starter">
-                  <Button className="font-semiboldn gap-3 py-6 text-lg" size={'lg'}>
-                    <Zap />
-                    {t('get-started')}
-                  </Button>
-                </a>
-              </div>
-              <div className="mx-auto w-full max-w-full space-y-4">
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-                  <div className="flex flex-col items-center space-y-2 rounded-lg p-4">
-                    <div className="rounded-full bg-black p-4 text-white">
-                      <Rocket size={32} />
-                    </div>
-                    <h2 className="text-2xl font-bold text-white">{t('modernstack')}</h2>
-                    <p className="text-white">{t('modernstack-desc')}</p>
-                  </div>
-                  <div className="flex flex-col items-center space-y-2 rounded-lg p-4">
-                    <div className="rounded-full bg-black p-4 text-white">
-                      <Globe2 size={32} />
-                    </div>
-                    <h2 className="text-2xl font-bold text-white">{t('i18nsupport')}</h2>
-                    <p className="text-white">{t('i18nsupport-desc')}</p>
-                  </div>
-                  <div className="flex flex-col items-center space-y-2 rounded-lg p-4">
-                    <div className="rounded-full bg-black p-4 text-white">
-                      <Wrench size={32} />
-                    </div>
-                    <h2 className="text-2xl font-bold text-white"> {t('linters')} </h2>
-                    <p className="text-white">{t('linters-desc')}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="container mx-auto max-w-screen-md px-4">
+      <div {...getRootProps()} className="dropzone mt-6 cursor-pointer rounded-sm border-2 border-dashed p-6">
+        <input {...getInputProps()} />
+        <Upload size="32" className="mx-auto" />
+        <div className="mt-2 text-center text-sm text-slate-500"></div>
+      </div>
     </div>
   )
 }
